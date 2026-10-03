@@ -1,0 +1,310 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AgriTech Control Panel</title>
+    <style>
+        :root {
+            --bg: #f8fafc;
+            --surface: #ffffff;
+            --primary: #4c1d95; 
+            --primary-light: #f3e8ff; 
+            --accent: #7c3aed; 
+            --text-dark: #1e1b4b; 
+            --success: #10b981;
+            --danger: #ef4444;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+            background-color: var(--bg);
+            color: var(--text-dark);
+            margin: 0;
+            padding: 0;
+        }
+
+        header {
+            background: linear-gradient(135deg, var(--primary), #2e1065);
+            color: white;
+            padding: 1.25rem 2rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        header h1 {
+            margin: 0;
+            font-size: 1.4rem;
+            font-weight: 700;
+        }
+
+        .demo-pill-box {
+            display: flex;
+            align-items: center;
+            background-color: rgba(255, 255, 255, 0.12);
+            padding: 0.4rem 1rem;
+            border-radius: 20px;
+            gap: 10px;
+            font-size: 0.85rem;
+            font-weight: 600;
+            border: 1px solid rgba(255, 255, 255, 0.2);
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 2rem auto;
+            padding: 0 1.5rem;
+            display: grid;
+            grid-template-columns: 2fr 1fr;
+            gap: 2rem;
+        }
+
+        @media (max-width: 900px) {
+            .container { grid-template-columns: 1fr; }
+        }
+
+        .card {
+            background: var(--surface);
+            border-radius: 16px;
+            padding: 1.5rem;
+            box-shadow: 0 4px 6px -1px rgba(0,0,0,0.03);
+            border: 1px solid #f3f4f6;
+            margin-bottom: 1.5rem;
+        }
+
+        h2 {
+            margin-top: 0;
+            font-size: 1.2rem;
+            color: var(--primary);
+            border-bottom: 2px solid var(--primary-light);
+            padding-bottom: 0.5rem;
+            margin-bottom: 1.5rem;
+        }
+
+        .telemetry-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 1.5rem;
+        }
+
+        .data-box {
+            background-color: var(--primary-light);
+            border-radius: 12px;
+            padding: 1.5rem;
+            border: 1px solid #e9d5ff;
+            text-align: center;
+        }
+
+        .data-value {
+            font-size: 2.75rem;
+            font-weight: 800;
+            color: var(--primary);
+            margin: 0.5rem 0;
+        }
+
+        .status-pill {
+            display: inline-block;
+            padding: 0.25rem 0.85rem;
+            border-radius: 20px;
+            font-size: 0.8rem;
+            font-weight: 700;
+            letter-spacing: 0.5px;
+        }
+
+        .status-wet { background-color: #d1fae5; color: var(--success); }
+        .status-dry { background-color: #fee2e2; color: var(--danger); }
+
+        .control-row {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 1.1rem 0;
+            border-bottom: 1px solid #f3f4f6;
+        }
+
+        .control-row:last-child { border-bottom: none; }
+        .control-label h3 { margin: 0; font-size: 1.05rem; color: var(--text-dark); }
+
+        .switch {
+            position: relative;
+            display: inline-block;
+            width: 48px;
+            height: 24px;
+        }
+
+        .switch input { opacity: 0; width: 0; height: 0; }
+
+        .slider {
+            position: absolute;
+            cursor: pointer;
+            top: 0; left: 0; right: 0; bottom: 0;
+            background-color: #cbd5e1;
+            transition: .25s;
+            border-radius: 24px;
+        }
+
+        .slider:before {
+            position: absolute;
+            content: "";
+            height: 18px; width: 18px;
+            left: 3px; bottom: 3px;
+            background-color: white;
+            transition: .25s;
+            border-radius: 50%;
+        }
+
+        input:checked + .slider { background-color: var(--accent); }
+        input:checked + .slider:before { transform: translateX(24px); }
+
+        .simulator-box {
+            border-top: 4px solid var(--accent);
+        }
+
+        .simulator-box.disabled {
+            opacity: 0.4;
+            pointer-events: none;
+        }
+
+        .range-wrapper {
+            margin-top: 1.25rem;
+        }
+
+        .range-wrapper label {
+            display: block;
+            font-size: 0.85rem;
+            margin-bottom: 0.4rem;
+        }
+
+        input[type="range"] {
+            width: 100%;
+            accent-color: var(--accent);
+        }
+
+        .indicator {
+            width: 10px;
+            height: 10px;
+            border-radius: 50%;
+            display: inline-block;
+            background-color: #cbd5e1;
+            margin-right: 6px;
+        }
+        .indicator.active { background-color: var(--success); box-shadow: 0 0 8px var(--success); }
+        
+        .qr-container {
+            text-align: center;
+            margin-top: 1.5rem;
+            padding-top: 1.5rem;
+            border-top: 1px solid #f3f4f6;
+        }
+        .qr-container img {
+            width: 130px;
+            height: 130px;
+        }
+    </style>
+</head>
+<body>
+
+    <header>
+        <h1>AgriTech Dashboard</h1>
+        <div class="demo-pill-box">
+            <span>DEMO MODE</span>
+            <label class="switch">
+                <input type="checkbox" id="demo-master" checked onchange="toggleDemoMode()">
+                <span class="slider"></span>
+            </label>
+        </div>
+    </header>
+
+    <div class="container">
+        
+        <div>
+            <div class="card">
+                <h2>Field Telemetry Readout</h2>
+                <div class="telemetry-grid">
+                    <div class="data-box" id="box-bed1">
+                        <div style="font-weight: 600; font-size: 0.9rem; letter-spacing: 0.5px;">PLANTER BED 1</div>
+                        <div class="data-value" id="val-bed1">65%</div>
+                        <div class="status-pill status-wet" id="pill-bed1">MOIST</div>
+                    </div>
+                    <div class="data-box" id="box-bed2">
+                        <div style="font-weight: 600; font-size: 0.9rem; letter-spacing: 0.5px;">PLANTER BED 2</div>
+                        <div class="data-value" id="val-bed2">28%</div>
+                        <div class="status-pill status-dry" id="pill-bed2">DRY</div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="card">
+                <h2>System Controls</h2>
+                
+                <div class="control-row">
+                    <div class="control-label">
+                        <h3>Valve 1 (Bed 1)</h3>
+                    </div>
+                    <label class="switch">
+                        <input type="checkbox" id="switch-v1" onchange="processControlAction(1)">
+                        <span class="slider"></span>
+                    </label>
+                </div>
+
+                <div class="control-row">
+                    <div class="control-label">
+                        <h3>Valve 2 (Bed 2)</h3>
+                    </div>
+                    <label class="switch">
+                        <input type="checkbox" id="switch-v2" onchange="processControlAction(2)">
+                        <span class="slider"></span>
+                    </label>
+                </div>
+
+                <div class="control-row">
+                    <div class="control-label">
+                        <h3>Water Pump Status</h3>
+                    </div>
+                    <div style="font-weight: bold; display: flex; align-items: center;">
+                        <span class="indicator" id="ind-pump"></span>
+                        <span id="txt-pump">OFF</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div>
+            <div class="card simulator-box" id="sandbox-card">
+                <h2>Simulation Panel</h2>
+                
+                <div style="font-size: 0.9rem; margin-bottom: 1.5rem;">
+                    <span class="indicator" id="ind-flow"></span> Flowmeter: 
+                    <span id="txt-flow" style="font-weight: bold; color: var(--primary); margin-left: 5px;">0.0 L/m</span>
+                </div>
+
+                <div class="range-wrapper">
+                    <label for="sim-bed1">Bed 1 Moisture Level:</label>
+                    <input type="range" id="sim-bed1" min="0" max="100" value="65" oninput="executeSimulationData()">
+                </div>
+
+                <div class="range-wrapper" style="margin-top: 1.5rem;">
+                    <label for="sim-bed2">Bed 2 Moisture Level:</label>
+                    <input type="range" id="sim-bed2" min="0" max="100" value="28" oninput="executeSimulationData()">
+                </div>
+
+                <div class="qr-container">
+                    <div style="font-size: 0.8rem; font-weight: bold; margin-bottom: 0.5rem; color: var(--text-dark);">SCAN TO ACCESS PANEL</div>
+                    <img id="qr-image" src="" alt="Dashboard QR Code">
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        function generateQR() {
+            let currentURL = window.location.href;
+            let qrImg = document.getElementById('qr-image');
+            qrImg.src = "https://qrserver.com" + encodeURIComponent(currentURL);
+        }
+
+        function executeSimulationData() {
+            let isDemoMode = document.getElementById('demo-master').checked;
+            if (!isDemoMode) return; 
+
