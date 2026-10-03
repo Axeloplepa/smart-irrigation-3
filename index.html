@@ -8,12 +8,17 @@
         :root {
             --bg: #f8fafc;
             --surface: #ffffff;
-            --primary: #4c1d95; 
-            --primary-light: #f3e8ff; 
-            --accent: #7c3aed; 
-            --text-dark: #1e1b4b; 
+            --primary: #4c1d95;
+            --primary-light: #f3e8ff;
+            --accent: #7c3aed;
+            --text-dark: #1e1b4b;
             --success: #10b981;
             --danger: #ef4444;
+            --gray: #cbd5e1;
+        }
+
+        * {
+            box-sizing: border-box;
         }
 
         body {
@@ -22,6 +27,7 @@
             color: var(--text-dark);
             margin: 0;
             padding: 0;
+            line-height: 1.5;
         }
 
         header {
@@ -31,6 +37,8 @@
             display: flex;
             justify-content: space-between;
             align-items: center;
+            flex-wrap: wrap;
+            gap: 1rem;
         }
 
         header h1 {
@@ -56,19 +64,21 @@
             margin: 2rem auto;
             padding: 0 1.5rem;
             display: grid;
-            grid-template-columns: 1.2fr 1fr; /* Enlarged right column */
+            grid-template-columns: 1.2fr 1fr;
             gap: 2rem;
         }
 
         @media (max-width: 900px) {
-            .container { grid-template-columns: 1fr; }
+            .container {
+                grid-template-columns: 1fr;
+            }
         }
 
         .card {
             background: var(--surface);
             border-radius: 16px;
             padding: 1.75rem;
-            box-shadow: 0 4px 6px -1px rgba(0,0,0,0.03);
+            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.03);
             border: 1px solid #f3f4f6;
             margin-bottom: 1.5rem;
         }
@@ -88,12 +98,23 @@
             gap: 1.5rem;
         }
 
+        @media (max-width: 500px) {
+            .telemetry-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+
         .data-box {
             background-color: var(--primary-light);
             border-radius: 12px;
             padding: 1.5rem;
             border: 1px solid #e9d5ff;
             text-align: center;
+            transition: transform 0.15s ease;
+        }
+
+        .data-box:hover {
+            transform: translateY(-2px);
         }
 
         .data-value {
@@ -101,6 +122,7 @@
             font-weight: 800;
             color: var(--primary);
             margin: 0.5rem 0;
+            line-height: 1;
         }
 
         .status-pill {
@@ -112,8 +134,15 @@
             letter-spacing: 0.5px;
         }
 
-        .status-wet { background-color: #d1fae5; color: var(--success); }
-        .status-dry { background-color: #fee2e2; color: var(--danger); }
+        .status-wet {
+            background-color: #d1fae5;
+            color: var(--success);
+        }
+
+        .status-dry {
+            background-color: #fee2e2;
+            color: var(--danger);
+        }
 
         .control-row {
             display: flex;
@@ -123,8 +152,15 @@
             border-bottom: 1px solid #f3f4f6;
         }
 
-        .control-row:last-child { border-bottom: none; }
-        .control-label h3 { margin: 0; font-size: 1.1rem; color: var(--text-dark); }
+        .control-row:last-child {
+            border-bottom: none;
+        }
+
+        .control-label h3 {
+            margin: 0;
+            font-size: 1.1rem;
+            color: var(--text-dark);
+        }
 
         /* Larger Switches */
         .switch {
@@ -134,36 +170,52 @@
             height: 32px;
         }
 
-        .switch input { opacity: 0; width: 0; height: 0; }
+        .switch input {
+            opacity: 0;
+            width: 0;
+            height: 0;
+        }
 
         .slider {
             position: absolute;
             cursor: pointer;
-            top: 0; left: 0; right: 0; bottom: 0;
-            background-color: #cbd5e1;
-            transition: .25s;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background-color: var(--gray);
+            transition: 0.25s;
             border-radius: 32px;
         }
 
         .slider:before {
             position: absolute;
             content: "";
-            height: 24px; width: 24px;
-            left: 4px; bottom: 4px;
+            height: 24px;
+            width: 24px;
+            left: 4px;
+            bottom: 4px;
             background-color: white;
-            transition: .25s;
+            transition: 0.25s;
             border-radius: 50%;
+            box-shadow: 0 1px 3px rgba(0, 0, 0, 0.2);
         }
 
-        input:checked + .slider { background-color: var(--accent); }
-        input:checked + .slider:before { transform: translateX(32px); }
+        input:checked + .slider {
+            background-color: var(--accent);
+        }
+
+        input:checked + .slider:before {
+            transform: translateX(32px);
+        }
 
         .info-box {
             border-top: 4px solid var(--accent);
+            transition: opacity 0.3s ease;
         }
 
         .info-box.disabled {
-            opacity: 0.4;
+            opacity: 0.45;
             pointer-events: none;
         }
 
@@ -190,12 +242,16 @@
             height: 14px;
             border-radius: 50%;
             display: inline-block;
-            background-color: #cbd5e1;
+            background-color: var(--gray);
             margin-right: 8px;
+            transition: background-color 0.2s, box-shadow 0.2s;
         }
-        .indicator.active { background-color: var(--success); box-shadow: 0 0 8px var(--success); }
-        
-        /* Larger Status Fonts */
+
+        .indicator.active {
+            background-color: var(--success);
+            box-shadow: 0 0 8px var(--success);
+        }
+
         #txt-pump {
             font-size: 1.5rem;
             font-weight: 800;
@@ -206,10 +262,16 @@
             font-size: 1.3rem;
             font-weight: 800;
         }
+
+        .flow-row {
+            font-size: 1.1rem;
+            margin-bottom: 2rem;
+            display: flex;
+            align-items: center;
+        }
     </style>
 </head>
 <body>
-
     <header>
         <h1>Group 5 System</h1>
         <div class="demo-pill-box">
@@ -222,7 +284,6 @@
     </header>
 
     <div class="container">
-        
         <!-- LEFT PANEL -->
         <div>
             <div class="card">
@@ -243,7 +304,7 @@
 
             <div class="card">
                 <h2>System Controls</h2>
-                
+
                 <div class="control-row">
                     <div class="control-label">
                         <h3>Valve 1 (Bed 1)</h3>
@@ -276,23 +337,24 @@
             </div>
         </div>
 
-        <!-- RIGHT PANEL (ENLARGED INFORMATION PANEL) -->
+        <!-- RIGHT PANEL -->
         <div>
             <div class="card info-box" id="sandbox-card">
                 <h2>Information Panel</h2>
-                
-                <div style="font-size: 1.1rem; margin-bottom: 2rem; display: flex; align-items: center;">
-                    <span class="indicator" id="ind-flow"></span> Flowmeter: 
+
+                <div class="flow-row">
+                    <span class="indicator" id="ind-flow"></span>
+                    Flowmeter:
                     <span id="txt-flow" style="color: var(--primary); margin-left: 8px;">0.0 L/m</span>
                 </div>
 
                 <div class="range-wrapper">
-                    <label for="sim-bed1">Bed 1 Moisture Level:</label>
+                    <label for="sim-bed1">Bed 1 Moisture Level: <span id="sim-bed1-val">65</span>%</label>
                     <input type="range" id="sim-bed1" min="0" max="100" value="65" oninput="executeSimulationData()">
                 </div>
 
                 <div class="range-wrapper" style="margin-top: 2rem;">
-                    <label for="sim-bed2">Bed 2 Moisture Level:</label>
+                    <label for="sim-bed2">Bed 2 Moisture Level: <span id="sim-bed2-val">28</span>%</label>
                     <input type="range" id="sim-bed2" min="0" max="100" value="28" oninput="executeSimulationData()">
                 </div>
             </div>
@@ -300,15 +362,106 @@
     </div>
 
     <script>
+        // ========== DOM REFERENCES ==========
+        const demoMaster = document.getElementById('demo-master');
+        const sandboxCard = document.getElementById('sandbox-card');
+        const switchV1 = document.getElementById('switch-v1');
+        const switchV2 = document.getElementById('switch-v2');
+        const indPump = document.getElementById('ind-pump');
+        const txtPump = document.getElementById('txt-pump');
+        const indFlow = document.getElementById('ind-flow');
+        const txtFlow = document.getElementById('txt-flow');
+
+        const valBed1 = document.getElementById('val-bed1');
+        const valBed2 = document.getElementById('val-bed2');
+        const pillBed1 = document.getElementById('pill-bed1');
+        const pillBed2 = document.getElementById('pill-bed2');
+
+        const simBed1 = document.getElementById('sim-bed1');
+        const simBed2 = document.getElementById('sim-bed2');
+        const simBed1Val = document.getElementById('sim-bed1-val');
+        const simBed2Val = document.getElementById('sim-bed2-val');
+
+        // Threshold for DRY vs MOIST
+        const MOISTURE_THRESHOLD = 40;
+
+        // ========== DEMO MODE ==========
+        function toggleDemoMode() {
+            const isDemo = demoMaster.checked;
+
+            if (isDemo) {
+                sandboxCard.classList.remove('disabled');
+                // Re-apply current slider values
+                executeSimulationData();
+            } else {
+                sandboxCard.classList.add('disabled');
+            }
+        }
+
+        // ========== SIMULATION SLIDERS ==========
         function executeSimulationData() {
-            let isDemoMode = document.getElementById('demo-master').checked;
-            if (!isDemoMode) return; 
+            if (!demoMaster.checked) return;
 
-            let b1 = document.getElementById('sim-bed1').value;
-            let b2 = document.getElementById('sim-bed2').value;
+            const b1 = Number(simBed1.value);
+            const b2 = Number(simBed2.value);
 
-            document.getElementById('val-bed1').innerText = b1 + "%";
-            document.getElementById('val-bed2').innerText = b2 + "%";
+            // Update live percentage labels next to the sliders
+            simBed1Val.textContent = b1;
+            simBed2Val.textContent = b2;
 
-            let p1 = document.getElementById('pill-bed1');
-            if (b1 < 40) {
+            // Update telemetry displays
+            valBed1.textContent = b1 + '%';
+            valBed2.textContent = b2 + '%';
+
+            updateMoistureStatus(pillBed1, b1);
+            updateMoistureStatus(pillBed2, b2);
+        }
+
+        function updateMoistureStatus(pillElement, value) {
+            if (value < MOISTURE_THRESHOLD) {
+                pillElement.textContent = 'DRY';
+                pillElement.className = 'status-pill status-dry';
+            } else {
+                pillElement.textContent = 'MOIST';
+                pillElement.className = 'status-pill status-wet';
+            }
+        }
+
+        // ========== VALVE + PUMP LOGIC ==========
+        function processControlAction() {
+            const v1Open = switchV1.checked;
+            const v2Open = switchV2.checked;
+            const anyValveOpen = v1Open || v2Open;
+
+            // Pump status
+            if (anyValveOpen) {
+                indPump.classList.add('active');
+                txtPump.textContent = 'ON';
+                txtPump.style.color = 'var(--success)';
+            } else {
+                indPump.classList.remove('active');
+                txtPump.textContent = 'OFF';
+                txtPump.style.color = '';
+            }
+
+            // Flow rate (simple model: 4.5 L/m per open valve)
+            let flow = 0;
+            if (v1Open) flow += 4.5;
+            if (v2Open) flow += 4.5;
+
+            txtFlow.textContent = flow.toFixed(1) + ' L/m';
+
+            if (flow > 0) {
+                indFlow.classList.add('active');
+            } else {
+                indFlow.classList.remove('active');
+            }
+        }
+
+        // ========== INIT ==========
+        // Make sure everything starts in a consistent state
+        processControlAction();
+        toggleDemoMode();
+    </script>
+</body>
+</html>
