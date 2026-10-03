@@ -6,168 +6,323 @@
     <title>Group 5 System</title>
     <style>
         :root {
-            --bg: #f8fafc;
-            --surface: #ffffff;
-            --primary: #4c1d95;
-            --primary-light: #f3e8ff;
-            --accent: #7c3aed;
-            --text-dark: #1e1b4b;
+            --bg: #0f1419;
+            --surface: #1a2332;
+            --surface-2: #243044;
+            --border: #2d3a4f;
+            --primary: #3b82f6;
+            --primary-dim: #1e3a5f;
+            --accent: #22d3ee;
             --success: #10b981;
             --danger: #ef4444;
-            --gray: #cbd5e1;
+            --warning: #f59e0b;
+            --text: #e2e8f0;
+            --text-dim: #94a3b8;
+            --text-muted: #64748b;
         }
 
         * {
             box-sizing: border-box;
+            margin: 0;
+            padding: 0;
         }
 
         body {
-            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
-            background-color: var(--bg);
-            color: var(--text-dark);
-            margin: 0;
-            padding: 0;
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+            background: var(--bg);
+            color: var(--text);
+            min-height: 100vh;
             line-height: 1.5;
         }
 
-        header {
-            background: linear-gradient(135deg, var(--primary), #2e1065);
-            color: white;
-            padding: 1.25rem 2rem;
+        /* ========== TOP STATUS BAR ========== */
+        .status-bar {
+            background: var(--surface);
+            border-bottom: 1px solid var(--border);
+            padding: 0.9rem 1.75rem;
             display: flex;
+            align-items: center;
             justify-content: space-between;
-            align-items: center;
+            gap: 1.5rem;
             flex-wrap: wrap;
-            gap: 1rem;
+            position: sticky;
+            top: 0;
+            z-index: 100;
         }
 
-        header h1 {
-            margin: 0;
-            font-size: 1.4rem;
-            font-weight: 700;
-        }
-
-        .demo-pill-box {
+        .brand {
             display: flex;
             align-items: center;
-            background-color: rgba(255, 255, 255, 0.12);
-            padding: 0.4rem 1rem;
-            border-radius: 20px;
-            gap: 10px;
-            font-size: 0.85rem;
-            font-weight: 600;
-            border: 1px solid rgba(255, 255, 255, 0.2);
+            gap: 0.75rem;
         }
 
-        .container {
-            max-width: 1300px;
-            margin: 2rem auto;
-            padding: 0 1.5rem;
+        .brand-icon {
+            width: 32px;
+            height: 32px;
+            background: linear-gradient(135deg, var(--primary), var(--accent));
+            border-radius: 8px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: 800;
+            font-size: 0.85rem;
+            color: white;
+        }
+
+        .brand h1 {
+            font-size: 1.15rem;
+            font-weight: 700;
+            letter-spacing: -0.02em;
+        }
+
+        .brand span {
+            font-size: 0.75rem;
+            color: var(--text-muted);
+            font-weight: 500;
+        }
+
+        .status-group {
+            display: flex;
+            align-items: center;
+            gap: 1.75rem;
+            flex-wrap: wrap;
+        }
+
+        .status-item {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            font-size: 0.85rem;
+        }
+
+        .status-item .label {
+            color: var(--text-muted);
+            font-weight: 500;
+            text-transform: uppercase;
+            letter-spacing: 0.04em;
+            font-size: 0.7rem;
+        }
+
+        .status-item .value {
+            font-weight: 700;
+            font-variant-numeric: tabular-nums;
+            letter-spacing: -0.01em;
+        }
+
+        .led {
+            width: 10px;
+            height: 10px;
+            border-radius: 50%;
+            background: #334155;
+            box-shadow: inset 0 0 2px rgba(0,0,0,0.5);
+            transition: all 0.25s ease;
+        }
+
+        .led.on {
+            background: var(--success);
+            box-shadow: 0 0 8px var(--success), 0 0 16px rgba(16, 185, 129, 0.3);
+        }
+
+        .led.warn {
+            background: var(--warning);
+            box-shadow: 0 0 8px var(--warning);
+        }
+
+        .led.danger {
+            background: var(--danger);
+            box-shadow: 0 0 8px var(--danger);
+        }
+
+        .demo-toggle {
+            display: flex;
+            align-items: center;
+            gap: 0.6rem;
+            background: var(--surface-2);
+            padding: 0.35rem 0.85rem;
+            border-radius: 999px;
+            border: 1px solid var(--border);
+            font-size: 0.8rem;
+            font-weight: 600;
+            cursor: pointer;
+            user-select: none;
+        }
+
+        .demo-toggle input {
+            display: none;
+        }
+
+        .toggle-track {
+            width: 36px;
+            height: 20px;
+            background: #334155;
+            border-radius: 999px;
+            position: relative;
+            transition: background 0.2s;
+        }
+
+        .toggle-track::after {
+            content: '';
+            position: absolute;
+            width: 16px;
+            height: 16px;
+            background: white;
+            border-radius: 50%;
+            top: 2px;
+            left: 2px;
+            transition: transform 0.2s;
+        }
+
+        .demo-toggle input:checked + .toggle-track {
+            background: var(--accent);
+        }
+
+        .demo-toggle input:checked + .toggle-track::after {
+            transform: translateX(16px);
+        }
+
+        /* ========== MAIN CONTENT ========== */
+        .main {
+            max-width: 1280px;
+            margin: 0 auto;
+            padding: 1.75rem;
+        }
+
+        .section-title {
+            font-size: 0.7rem;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 0.08em;
+            color: var(--text-muted);
+            margin-bottom: 0.85rem;
+        }
+
+        .grid {
             display: grid;
-            grid-template-columns: 1.2fr 1fr;
-            gap: 2rem;
+            gap: 1.25rem;
+        }
+
+        .grid-2 {
+            grid-template-columns: 1fr 1fr;
+        }
+
+        .grid-3 {
+            grid-template-columns: 1fr 1fr 1fr;
         }
 
         @media (max-width: 900px) {
-            .container {
+            .grid-3 {
+                grid-template-columns: 1fr 1fr;
+            }
+        }
+
+        @media (max-width: 600px) {
+            .grid-2, .grid-3 {
                 grid-template-columns: 1fr;
             }
         }
 
+        /* ========== CARDS ========== */
         .card {
             background: var(--surface);
-            border-radius: 16px;
-            padding: 1.75rem;
-            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.03);
-            border: 1px solid #f3f4f6;
-            margin-bottom: 1.5rem;
-        }
-
-        h2 {
-            margin-top: 0;
-            font-size: 1.3rem;
-            color: var(--primary);
-            border-bottom: 2px solid var(--primary-light);
-            padding-bottom: 0.5rem;
-            margin-bottom: 1.5rem;
-        }
-
-        .telemetry-grid {
-            display: grid;
-            grid-template-columns: 1fr 1fr;
-            gap: 1.5rem;
-        }
-
-        @media (max-width: 500px) {
-            .telemetry-grid {
-                grid-template-columns: 1fr;
-            }
-        }
-
-        .data-box {
-            background-color: var(--primary-light);
+            border: 1px solid var(--border);
             border-radius: 12px;
-            padding: 1.5rem;
-            border: 1px solid #e9d5ff;
-            text-align: center;
-            transition: transform 0.15s ease;
+            padding: 1.35rem;
+            transition: border-color 0.2s;
         }
 
-        .data-box:hover {
-            transform: translateY(-2px);
+        .card:hover {
+            border-color: #3d4f6a;
         }
 
-        .data-value {
-            font-size: 2.75rem;
+        .card-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 1.1rem;
+        }
+
+        .card-title {
+            font-size: 0.9rem;
+            font-weight: 600;
+            color: var(--text-dim);
+        }
+
+        .card-badge {
+            font-size: 0.65rem;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+            padding: 0.2rem 0.55rem;
+            border-radius: 4px;
+            background: var(--surface-2);
+            color: var(--text-muted);
+        }
+
+        /* Telemetry Cards */
+        .telemetry-value {
+            font-size: 2.8rem;
             font-weight: 800;
-            color: var(--primary);
-            margin: 0.5rem 0;
+            letter-spacing: -0.04em;
+            font-variant-numeric: tabular-nums;
             line-height: 1;
+            margin-bottom: 0.6rem;
         }
 
-        .status-pill {
-            display: inline-block;
-            padding: 0.25rem 0.85rem;
-            border-radius: 20px;
+        .telemetry-status {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.4rem;
             font-size: 0.8rem;
             font-weight: 700;
-            letter-spacing: 0.5px;
+            letter-spacing: 0.03em;
+            padding: 0.3rem 0.7rem;
+            border-radius: 6px;
         }
 
-        .status-wet {
-            background-color: #d1fae5;
+        .status-moist {
+            background: rgba(16, 185, 129, 0.15);
             color: var(--success);
         }
 
         .status-dry {
-            background-color: #fee2e2;
+            background: rgba(239, 68, 68, 0.15);
             color: var(--danger);
         }
 
+        /* Control Cards */
         .control-row {
             display: flex;
             justify-content: space-between;
             align-items: center;
-            padding: 1.2rem 0;
-            border-bottom: 1px solid #f3f4f6;
+            padding: 0.9rem 0;
+            border-bottom: 1px solid var(--border);
         }
 
         .control-row:last-child {
             border-bottom: none;
+            padding-bottom: 0;
         }
 
-        .control-label h3 {
-            margin: 0;
-            font-size: 1.1rem;
-            color: var(--text-dark);
+        .control-row:first-child {
+            padding-top: 0;
         }
 
-        /* Larger Switches */
+        .control-label {
+            font-size: 0.95rem;
+            font-weight: 500;
+        }
+
+        .control-sub {
+            font-size: 0.75rem;
+            color: var(--text-muted);
+            margin-top: 0.15rem;
+        }
+
+        /* Industrial Switch */
         .switch {
             position: relative;
-            display: inline-block;
-            width: 64px;
-            height: 32px;
+            width: 52px;
+            height: 28px;
         }
 
         .switch input {
@@ -179,135 +334,233 @@
         .slider {
             position: absolute;
             cursor: pointer;
-            top: 0;
-            left: 0;
-            right: 0;
-            bottom: 0;
-            background-color: var(--gray);
-            transition: 0.25s;
-            border-radius: 32px;
+            inset: 0;
+            background: #334155;
+            border-radius: 6px;
+            transition: 0.2s;
+            border: 1px solid #475569;
         }
 
-        .slider:before {
+        .slider::before {
+            content: '';
             position: absolute;
-            content: "";
-            height: 24px;
-            width: 24px;
-            left: 4px;
-            bottom: 4px;
-            background-color: white;
-            transition: 0.25s;
-            border-radius: 50%;
-            box-shadow: 0 1px 3px rgba(0, 0, 0, 0.2);
+            height: 20px;
+            width: 20px;
+            left: 3px;
+            bottom: 3px;
+            background: #94a3b8;
+            border-radius: 4px;
+            transition: 0.2s;
         }
 
         input:checked + .slider {
-            background-color: var(--accent);
+            background: var(--primary-dim);
+            border-color: var(--primary);
         }
 
-        input:checked + .slider:before {
-            transform: translateX(32px);
+        input:checked + .slider::before {
+            transform: translateX(24px);
+            background: var(--primary);
+            box-shadow: 0 0 8px rgba(59, 130, 246, 0.5);
         }
 
-        .info-box {
-            border-top: 4px solid var(--accent);
-            transition: opacity 0.3s ease;
+        /* Pump & Flow big indicators */
+        .big-status {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            padding: 1.5rem 1rem;
+            text-align: center;
         }
 
-        .info-box.disabled {
-            opacity: 0.45;
+        .big-status .led {
+            width: 18px;
+            height: 18px;
+            margin-bottom: 0.75rem;
+        }
+
+        .big-status .value {
+            font-size: 1.6rem;
+            font-weight: 800;
+            letter-spacing: -0.02em;
+        }
+
+        .big-status .label {
+            font-size: 0.7rem;
+            text-transform: uppercase;
+            letter-spacing: 0.06em;
+            color: var(--text-muted);
+            margin-top: 0.25rem;
+        }
+
+        /* Simulation Panel */
+        .sim-panel {
+            opacity: 1;
+            transition: opacity 0.3s;
+        }
+
+        .sim-panel.disabled {
+            opacity: 0.4;
             pointer-events: none;
         }
 
-        .range-wrapper {
-            margin-top: 1.5rem;
+        .range-group {
+            margin-bottom: 1.5rem;
         }
 
-        .range-wrapper label {
-            display: block;
-            font-size: 0.95rem;
-            font-weight: 600;
-            margin-bottom: 0.6rem;
+        .range-group:last-child {
+            margin-bottom: 0;
+        }
+
+        .range-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 0.5rem;
+        }
+
+        .range-header label {
+            font-size: 0.85rem;
+            font-weight: 500;
+            color: var(--text-dim);
+        }
+
+        .range-value {
+            font-size: 0.9rem;
+            font-weight: 700;
+            font-variant-numeric: tabular-nums;
+            color: var(--accent);
         }
 
         input[type="range"] {
+            -webkit-appearance: none;
             width: 100%;
-            height: 8px;
-            accent-color: var(--accent);
+            height: 6px;
+            background: var(--surface-2);
+            border-radius: 3px;
+            outline: none;
+        }
+
+        input[type="range"]::-webkit-slider-thumb {
+            -webkit-appearance: none;
+            width: 18px;
+            height: 18px;
+            background: var(--accent);
+            border-radius: 4px;
             cursor: pointer;
+            border: 2px solid var(--bg);
+            box-shadow: 0 0 0 1px var(--accent);
         }
 
-        .indicator {
-            width: 14px;
-            height: 14px;
-            border-radius: 50%;
-            display: inline-block;
-            background-color: var(--gray);
-            margin-right: 8px;
-            transition: background-color 0.2s, box-shadow 0.2s;
+        input[type="range"]::-moz-range-thumb {
+            width: 18px;
+            height: 18px;
+            background: var(--accent);
+            border-radius: 4px;
+            cursor: pointer;
+            border: 2px solid var(--bg);
         }
 
-        .indicator.active {
-            background-color: var(--success);
-            box-shadow: 0 0 8px var(--success);
-        }
-
-        #txt-pump {
-            font-size: 1.5rem;
-            font-weight: 800;
-            transition: color 0.2s ease;
-        }
-
-        #txt-flow {
-            font-size: 1.3rem;
-            font-weight: 800;
-        }
-
-        .flow-row {
-            font-size: 1.1rem;
-            margin-bottom: 2rem;
-            display: flex;
-            align-items: center;
+        /* Footer note */
+        .footer-note {
+            margin-top: 2rem;
+            text-align: center;
+            font-size: 0.75rem;
+            color: var(--text-muted);
         }
     </style>
 </head>
 <body>
-    <header>
-        <h1>Group 5 System</h1>
-        <div class="demo-pill-box">
-            <span>DEMO MODE</span>
-            <label class="switch">
+
+    <!-- ========== TOP STATUS BAR ========== -->
+    <header class="status-bar">
+        <div class="brand">
+            <div class="brand-icon">G5</div>
+            <div>
+                <h1>Group 5 System</h1>
+                <span>Irrigation Control</span>
+            </div>
+        </div>
+
+        <div class="status-group">
+            <div class="status-item">
+                <div class="led" id="led-pump"></div>
+                <div>
+                    <div class="label">Pump</div>
+                    <div class="value" id="status-pump">OFF</div>
+                </div>
+            </div>
+
+            <div class="status-item">
+                <div class="led" id="led-flow"></div>
+                <div>
+                    <div class="label">Flow</div>
+                    <div class="value" id="status-flow">0.0 L/m</div>
+                </div>
+            </div>
+
+            <div class="status-item">
+                <div class="led" id="led-system"></div>
+                <div>
+                    <div class="label">System</div>
+                    <div class="value" id="status-system">IDLE</div>
+                </div>
+            </div>
+
+            <label class="demo-toggle">
+                <span>DEMO</span>
                 <input type="checkbox" id="demo-master" checked onchange="toggleDemoMode()">
-                <span class="slider"></span>
+                <div class="toggle-track"></div>
             </label>
         </div>
     </header>
 
-    <div class="container">
-        <!-- LEFT PANEL -->
-        <div>
+    <!-- ========== MAIN ========== -->
+    <main class="main">
+
+        <!-- TELEMETRY -->
+        <div class="section-title">Field Telemetry</div>
+        <div class="grid grid-2" style="margin-bottom: 1.75rem;">
             <div class="card">
-                <h2>Field Telemetry Readout</h2>
-                <div class="telemetry-grid">
-                    <div class="data-box" id="box-bed1">
-                        <div style="font-weight: 600; font-size: 0.9rem; letter-spacing: 0.5px;">PLANTER BED 1</div>
-                        <div class="data-value" id="val-bed1">65%</div>
-                        <div class="status-pill status-wet" id="pill-bed1">MOIST</div>
-                    </div>
-                    <div class="data-box" id="box-bed2">
-                        <div style="font-weight: 600; font-size: 0.9rem; letter-spacing: 0.5px;">PLANTER BED 2</div>
-                        <div class="data-value" id="val-bed2">28%</div>
-                        <div class="status-pill status-dry" id="pill-bed2">DRY</div>
-                    </div>
+                <div class="card-header">
+                    <div class="card-title">Planter Bed 1</div>
+                    <div class="card-badge">SENSOR</div>
+                </div>
+                <div class="telemetry-value" id="val-bed1">65%</div>
+                <div class="telemetry-status status-moist" id="pill-bed1">
+                    <span class="led on" style="width:8px;height:8px;"></span>
+                    MOIST
                 </div>
             </div>
 
             <div class="card">
-                <h2>System Controls</h2>
+                <div class="card-header">
+                    <div class="card-title">Planter Bed 2</div>
+                    <div class="card-badge">SENSOR</div>
+                </div>
+                <div class="telemetry-value" id="val-bed2">28%</div>
+                <div class="telemetry-status status-dry" id="pill-bed2">
+                    <span class="led danger" style="width:8px;height:8px;"></span>
+                    DRY
+                </div>
+            </div>
+        </div>
+
+        <!-- CONTROLS + STATUS -->
+        <div class="section-title">System Controls</div>
+        <div class="grid grid-3" style="margin-bottom: 1.75rem;">
+            <!-- Valves -->
+            <div class="card">
+                <div class="card-header">
+                    <div class="card-title">Valves</div>
+                    <div class="card-badge">MANUAL</div>
+                </div>
 
                 <div class="control-row">
-                    <div class="control-label">
-                        <h3>Valve 1 (Bed 1)</h3>
+                    <div>
+                        <div class="control-label">Valve 1</div>
+                        <div class="control-sub">Bed 1 Line</div>
                     </div>
                     <label class="switch">
                         <input type="checkbox" id="switch-v1" onchange="processControlAction()">
@@ -316,57 +569,89 @@
                 </div>
 
                 <div class="control-row">
-                    <div class="control-label">
-                        <h3>Valve 2 (Bed 2)</h3>
+                    <div>
+                        <div class="control-label">Valve 2</div>
+                        <div class="control-sub">Bed 2 Line</div>
                     </div>
                     <label class="switch">
                         <input type="checkbox" id="switch-v2" onchange="processControlAction()">
                         <span class="slider"></span>
                     </label>
                 </div>
+            </div>
 
-                <div class="control-row">
-                    <div class="control-label">
-                        <h3>Water Pump Status</h3>
-                    </div>
-                    <div style="display: flex; align-items: center; gap: 4px;">
-                        <span class="indicator" id="ind-pump"></span>
-                        <span id="txt-pump">OFF</span>
-                    </div>
+            <!-- Pump Status -->
+            <div class="card">
+                <div class="card-header">
+                    <div class="card-title">Water Pump</div>
+                    <div class="card-badge">STATUS</div>
+                </div>
+                <div class="big-status">
+                    <div class="led" id="ind-pump"></div>
+                    <div class="value" id="txt-pump">OFF</div>
+                    <div class="label">Pump State</div>
+                </div>
+            </div>
+
+            <!-- Flow -->
+            <div class="card">
+                <div class="card-header">
+                    <div class="card-title">Flowmeter</div>
+                    <div class="card-badge">LIVE</div>
+                </div>
+                <div class="big-status">
+                    <div class="led" id="ind-flow"></div>
+                    <div class="value" id="txt-flow">0.0</div>
+                    <div class="label">Liters / min</div>
                 </div>
             </div>
         </div>
 
-        <!-- RIGHT PANEL -->
-        <div>
-            <div class="card info-box" id="sandbox-card">
-                <h2>Information Panel</h2>
+        <!-- SIMULATION -->
+        <div class="section-title">Simulation Controls</div>
+        <div class="card sim-panel" id="sandbox-card">
+            <div class="card-header">
+                <div class="card-title">Moisture Simulation</div>
+                <div class="card-badge">DEMO ONLY</div>
+            </div>
 
-                <div class="flow-row">
-                    <span class="indicator" id="ind-flow"></span>
-                    Flowmeter:
-                    <span id="txt-flow" style="color: var(--primary); margin-left: 8px;">0.0 L/m</span>
+            <div class="range-group">
+                <div class="range-header">
+                    <label for="sim-bed1">Bed 1 Moisture</label>
+                    <span class="range-value"><span id="sim-bed1-val">65</span>%</span>
                 </div>
+                <input type="range" id="sim-bed1" min="0" max="100" value="65" oninput="executeSimulationData()">
+            </div>
 
-                <div class="range-wrapper">
-                    <label for="sim-bed1">Bed 1 Moisture Level: <span id="sim-bed1-val">65</span>%</label>
-                    <input type="range" id="sim-bed1" min="0" max="100" value="65" oninput="executeSimulationData()">
+            <div class="range-group">
+                <div class="range-header">
+                    <label for="sim-bed2">Bed 2 Moisture</label>
+                    <span class="range-value"><span id="sim-bed2-val">28</span>%</span>
                 </div>
-
-                <div class="range-wrapper" style="margin-top: 2rem;">
-                    <label for="sim-bed2">Bed 2 Moisture Level: <span id="sim-bed2-val">28</span>%</label>
-                    <input type="range" id="sim-bed2" min="0" max="100" value="28" oninput="executeSimulationData()">
-                </div>
+                <input type="range" id="sim-bed2" min="0" max="100" value="28" oninput="executeSimulationData()">
             </div>
         </div>
-    </div>
+
+        <div class="footer-note">Group 5 System • Demo Interface</div>
+    </main>
 
     <script>
-        // ========== DOM REFERENCES ==========
+        const MOISTURE_THRESHOLD = 40;
+
+        // Elements
         const demoMaster = document.getElementById('demo-master');
         const sandboxCard = document.getElementById('sandbox-card');
+
         const switchV1 = document.getElementById('switch-v1');
         const switchV2 = document.getElementById('switch-v2');
+
+        const ledPump = document.getElementById('led-pump');
+        const ledFlow = document.getElementById('led-flow');
+        const ledSystem = document.getElementById('led-system');
+        const statusPump = document.getElementById('status-pump');
+        const statusFlow = document.getElementById('status-flow');
+        const statusSystem = document.getElementById('status-system');
+
         const indPump = document.getElementById('ind-pump');
         const txtPump = document.getElementById('txt-pump');
         const indFlow = document.getElementById('ind-flow');
@@ -382,84 +667,86 @@
         const simBed1Val = document.getElementById('sim-bed1-val');
         const simBed2Val = document.getElementById('sim-bed2-val');
 
-        // Threshold for DRY vs MOIST
-        const MOISTURE_THRESHOLD = 40;
-
-        // ========== DEMO MODE ==========
         function toggleDemoMode() {
-            const isDemo = demoMaster.checked;
-
-            if (isDemo) {
+            if (demoMaster.checked) {
                 sandboxCard.classList.remove('disabled');
-                // Re-apply current slider values
                 executeSimulationData();
             } else {
                 sandboxCard.classList.add('disabled');
             }
         }
 
-        // ========== SIMULATION SLIDERS ==========
         function executeSimulationData() {
             if (!demoMaster.checked) return;
 
             const b1 = Number(simBed1.value);
             const b2 = Number(simBed2.value);
 
-            // Update live percentage labels next to the sliders
             simBed1Val.textContent = b1;
             simBed2Val.textContent = b2;
 
-            // Update telemetry displays
             valBed1.textContent = b1 + '%';
             valBed2.textContent = b2 + '%';
 
-            updateMoistureStatus(pillBed1, b1);
-            updateMoistureStatus(pillBed2, b2);
+            updateMoisturePill(pillBed1, b1);
+            updateMoisturePill(pillBed2, b2);
         }
 
-        function updateMoistureStatus(pillElement, value) {
+        function updateMoisturePill(el, value) {
             if (value < MOISTURE_THRESHOLD) {
-                pillElement.textContent = 'DRY';
-                pillElement.className = 'status-pill status-dry';
+                el.className = 'telemetry-status status-dry';
+                el.innerHTML = `<span class="led danger" style="width:8px;height:8px;"></span> DRY`;
             } else {
-                pillElement.textContent = 'MOIST';
-                pillElement.className = 'status-pill status-wet';
+                el.className = 'telemetry-status status-moist';
+                el.innerHTML = `<span class="led on" style="width:8px;height:8px;"></span> MOIST`;
             }
         }
 
-        // ========== VALVE + PUMP LOGIC ==========
         function processControlAction() {
-            const v1Open = switchV1.checked;
-            const v2Open = switchV2.checked;
-            const anyValveOpen = v1Open || v2Open;
+            const v1 = switchV1.checked;
+            const v2 = switchV2.checked;
+            const anyOpen = v1 || v2;
 
-            // Pump status
-            if (anyValveOpen) {
-                indPump.classList.add('active');
+            // Pump
+            if (anyOpen) {
+                indPump.classList.add('on');
+                ledPump.classList.add('on');
                 txtPump.textContent = 'ON';
-                txtPump.style.color = 'var(--success)';
+                statusPump.textContent = 'ON';
             } else {
-                indPump.classList.remove('active');
+                indPump.classList.remove('on');
+                ledPump.classList.remove('on');
                 txtPump.textContent = 'OFF';
-                txtPump.style.color = '';
+                statusPump.textContent = 'OFF';
             }
 
-            // Flow rate (simple model: 4.5 L/m per open valve)
+            // Flow
             let flow = 0;
-            if (v1Open) flow += 4.5;
-            if (v2Open) flow += 4.5;
+            if (v1) flow += 4.5;
+            if (v2) flow += 4.5;
 
-            txtFlow.textContent = flow.toFixed(1) + ' L/m';
+            txtFlow.textContent = flow.toFixed(1);
+            statusFlow.textContent = flow.toFixed(1) + ' L/m';
 
             if (flow > 0) {
-                indFlow.classList.add('active');
+                indFlow.classList.add('on');
+                ledFlow.classList.add('on');
             } else {
-                indFlow.classList.remove('active');
+                indFlow.classList.remove('on');
+                ledFlow.classList.remove('on');
+            }
+
+            // System status
+            if (anyOpen) {
+                ledSystem.classList.add('on');
+                statusSystem.textContent = 'RUNNING';
+            } else {
+                ledSystem.classList.remove('on');
+                statusSystem.textContent = 'IDLE';
             }
         }
 
-        // ========== INIT ==========
-        // Make sure everything starts in a consistent state
+        // Init
         processControlAction();
         toggleDemoMode();
     </script>
