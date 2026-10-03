@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>AgriTech Control Panel</title>
+    <title>Group 5 System</title>
     <style>
         :root {
             --bg: #f8fafc;
@@ -52,11 +52,11 @@
         }
 
         .container {
-            max-width: 1200px;
+            max-width: 1300px;
             margin: 2rem auto;
             padding: 0 1.5rem;
             display: grid;
-            grid-template-columns: 2fr 1fr;
+            grid-template-columns: 1.2fr 1fr; /* Enlarged right column */
             gap: 2rem;
         }
 
@@ -67,7 +67,7 @@
         .card {
             background: var(--surface);
             border-radius: 16px;
-            padding: 1.5rem;
+            padding: 1.75rem;
             box-shadow: 0 4px 6px -1px rgba(0,0,0,0.03);
             border: 1px solid #f3f4f6;
             margin-bottom: 1.5rem;
@@ -75,7 +75,7 @@
 
         h2 {
             margin-top: 0;
-            font-size: 1.2rem;
+            font-size: 1.3rem;
             color: var(--primary);
             border-bottom: 2px solid var(--primary-light);
             padding-bottom: 0.5rem;
@@ -119,18 +119,19 @@
             display: flex;
             justify-content: space-between;
             align-items: center;
-            padding: 1.1rem 0;
+            padding: 1.2rem 0;
             border-bottom: 1px solid #f3f4f6;
         }
 
         .control-row:last-child { border-bottom: none; }
-        .control-label h3 { margin: 0; font-size: 1.05rem; color: var(--text-dark); }
+        .control-label h3 { margin: 0; font-size: 1.1rem; color: var(--text-dark); }
 
+        /* Larger Switches */
         .switch {
             position: relative;
             display: inline-block;
-            width: 48px;
-            height: 24px;
+            width: 64px;
+            height: 32px;
         }
 
         .switch input { opacity: 0; width: 0; height: 0; }
@@ -141,72 +142,76 @@
             top: 0; left: 0; right: 0; bottom: 0;
             background-color: #cbd5e1;
             transition: .25s;
-            border-radius: 24px;
+            border-radius: 32px;
         }
 
         .slider:before {
             position: absolute;
             content: "";
-            height: 18px; width: 18px;
-            left: 3px; bottom: 3px;
+            height: 24px; width: 24px;
+            left: 4px; bottom: 4px;
             background-color: white;
             transition: .25s;
             border-radius: 50%;
         }
 
         input:checked + .slider { background-color: var(--accent); }
-        input:checked + .slider:before { transform: translateX(24px); }
+        input:checked + .slider:before { transform: translateX(32px); }
 
-        .simulator-box {
+        .info-box {
             border-top: 4px solid var(--accent);
         }
 
-        .simulator-box.disabled {
+        .info-box.disabled {
             opacity: 0.4;
             pointer-events: none;
         }
 
         .range-wrapper {
-            margin-top: 1.25rem;
+            margin-top: 1.5rem;
         }
 
         .range-wrapper label {
             display: block;
-            font-size: 0.85rem;
-            margin-bottom: 0.4rem;
+            font-size: 0.95rem;
+            font-weight: 600;
+            margin-bottom: 0.6rem;
         }
 
         input[type="range"] {
             width: 100%;
+            height: 8px;
             accent-color: var(--accent);
+            cursor: pointer;
         }
 
         .indicator {
-            width: 10px;
-            height: 10px;
+            width: 14px;
+            height: 14px;
             border-radius: 50%;
             display: inline-block;
             background-color: #cbd5e1;
-            margin-right: 6px;
+            margin-right: 8px;
         }
         .indicator.active { background-color: var(--success); box-shadow: 0 0 8px var(--success); }
         
-        .qr-container {
-            text-align: center;
-            margin-top: 1.5rem;
-            padding-top: 1.5rem;
-            border-top: 1px solid #f3f4f6;
+        /* Larger Status Fonts */
+        #txt-pump {
+            font-size: 1.5rem;
+            font-weight: 800;
+            transition: color 0.2s ease;
         }
-        .qr-container img {
-            width: 130px;
-            height: 130px;
+
+        #txt-flow {
+            font-size: 1.3rem;
+            font-weight: 800;
         }
     </style>
 </head>
 <body>
 
     <header>
-        <h1>AgriTech Dashboard</h1>
+        <h1>Group 5 System</h1>
         <div class="demo-pill-box">
             <span>DEMO MODE</span>
             <label class="switch">
@@ -218,6 +223,7 @@
 
     <div class="container">
         
+        <!-- LEFT PANEL -->
         <div>
             <div class="card">
                 <h2>Field Telemetry Readout</h2>
@@ -243,7 +249,7 @@
                         <h3>Valve 1 (Bed 1)</h3>
                     </div>
                     <label class="switch">
-                        <input type="checkbox" id="switch-v1" onchange="processControlAction(1)">
+                        <input type="checkbox" id="switch-v1" onchange="processControlAction()">
                         <span class="slider"></span>
                     </label>
                 </div>
@@ -253,7 +259,7 @@
                         <h3>Valve 2 (Bed 2)</h3>
                     </div>
                     <label class="switch">
-                        <input type="checkbox" id="switch-v2" onchange="processControlAction(2)">
+                        <input type="checkbox" id="switch-v2" onchange="processControlAction()">
                         <span class="slider"></span>
                     </label>
                 </div>
@@ -262,7 +268,7 @@
                     <div class="control-label">
                         <h3>Water Pump Status</h3>
                     </div>
-                    <div style="font-weight: bold; display: flex; align-items: center;">
+                    <div style="display: flex; align-items: center; gap: 4px;">
                         <span class="indicator" id="ind-pump"></span>
                         <span id="txt-pump">OFF</span>
                     </div>
@@ -270,13 +276,14 @@
             </div>
         </div>
 
+        <!-- RIGHT PANEL (ENLARGED INFORMATION PANEL) -->
         <div>
-            <div class="card simulator-box" id="sandbox-card">
-                <h2>Simulation Panel</h2>
+            <div class="card info-box" id="sandbox-card">
+                <h2>Information Panel</h2>
                 
-                <div style="font-size: 0.9rem; margin-bottom: 1.5rem;">
+                <div style="font-size: 1.1rem; margin-bottom: 2rem; display: flex; align-items: center;">
                     <span class="indicator" id="ind-flow"></span> Flowmeter: 
-                    <span id="txt-flow" style="font-weight: bold; color: var(--primary); margin-left: 5px;">0.0 L/m</span>
+                    <span id="txt-flow" style="color: var(--primary); margin-left: 8px;">0.0 L/m</span>
                 </div>
 
                 <div class="range-wrapper">
@@ -284,27 +291,24 @@
                     <input type="range" id="sim-bed1" min="0" max="100" value="65" oninput="executeSimulationData()">
                 </div>
 
-                <div class="range-wrapper" style="margin-top: 1.5rem;">
+                <div class="range-wrapper" style="margin-top: 2rem;">
                     <label for="sim-bed2">Bed 2 Moisture Level:</label>
                     <input type="range" id="sim-bed2" min="0" max="100" value="28" oninput="executeSimulationData()">
-                </div>
-
-                <div class="qr-container">
-                    <div style="font-size: 0.8rem; font-weight: bold; margin-bottom: 0.5rem; color: var(--text-dark);">SCAN TO ACCESS PANEL</div>
-                    <img id="qr-image" src="" alt="Dashboard QR Code">
                 </div>
             </div>
         </div>
     </div>
 
     <script>
-        function generateQR() {
-            let currentURL = window.location.href;
-            let qrImg = document.getElementById('qr-image');
-            qrImg.src = "https://qrserver.com" + encodeURIComponent(currentURL);
-        }
-
         function executeSimulationData() {
             let isDemoMode = document.getElementById('demo-master').checked;
             if (!isDemoMode) return; 
 
+            let b1 = document.getElementById('sim-bed1').value;
+            let b2 = document.getElementById('sim-bed2').value;
+
+            document.getElementById('val-bed1').innerText = b1 + "%";
+            document.getElementById('val-bed2').innerText = b2 + "%";
+
+            let p1 = document.getElementById('pill-bed1');
+            if (b1 < 40) {
